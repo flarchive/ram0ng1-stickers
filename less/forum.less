@@ -1,0 +1,194 @@
+// Botão da toolbar
+// Os paths do SVG têm ~4px de respiro num viewBox de 24px; o 1.5em compensa
+// para igualar o peso visual dos ícones sólidos do Font Awesome.
+
+.Button-Sticker {
+  font-size: 1.5em;
+
+  svg {
+    vertical-align: -0.125em;
+  }
+}
+
+// Seletor de stickers
+
+.StickerPicker-wrapper {
+  position: fixed;
+  z-index: 1050;
+}
+
+.StickerPicker {
+  background: var(--body-bg);
+  border: 1px solid var(--control-bg-shaded, rgba(0,0,0,.10));
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.10), 0 8px 24px rgba(0,0,0,.06);
+  width: 320px;
+  max-width: 94vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: StickerPickerIn 0.14s ease-out both;
+
+  @keyframes StickerPickerIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  &-loading,
+  &-empty {
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--muted-color);
+    font-size: 13px;
+  }
+
+  &-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 8px 8px 0;
+    gap: 2px;
+    flex-shrink: 0;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: var(--muted-color);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px 6px;
+    white-space: nowrap;
+    transition: color .12s, border-color .12s;
+    flex-shrink: 0;
+
+    &:hover {
+      color: var(--text-color);
+    }
+
+    &.active {
+      border-bottom-color: var(--primary-color);
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+  }
+
+  &-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb {
+      background: var(--control-bg-shaded, rgba(0,0,0,.12));
+      border-radius: 4px;
+    }
+  }
+}
+
+// Itens do seletor
+
+.StickerItem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 4px;
+  transition: background .12s;
+
+  &:hover {
+    background: var(--control-bg, rgba(0,0,0,.05));
+  }
+
+  &:active {
+    background: var(--control-bg-shaded, rgba(0,0,0,.09));
+  }
+
+  img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
+  }
+
+  &--animated {
+    // tamanho definido pelo player interno
+  }
+}
+
+.StickerItem-player {
+  width: 56px;
+  height: 56px;
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+
+  // O lottie-web cria o <canvas> com o tamanho intrínseco da animação;
+  // max-* impede que o Firefox o renderize além da caixa de 56px.
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+  }
+}
+
+// Stickers nos posts
+
+span.Sticker {
+  display: inline-block;
+  vertical-align: middle;
+
+  img.sticker {
+    // width/height auto com max-width e max-height: o Firefox nem sempre
+    // respeita height fixo em elementos substituídos, e este padrão escala
+    // igual em todos os navegadores.
+    width: auto;
+    height: auto;
+    max-width: 10em;
+    max-height: 5em;
+    margin: .2em .3em;
+    vertical-align: middle;
+    object-fit: contain;
+  }
+
+  // Precisa ser inline-block, não inline-flex: no Firefox (bugs 1294939/1308636)
+  // o contêiner flex cresce até o tamanho intrínseco do <canvas> do lottie-web
+  // (em geral 512×512), ignorando width/height.
+  &--lottie,
+  &--tgs {
+    display: inline-block;
+    width: 5em;
+    height: 5em;
+    margin: .2em .3em;
+    vertical-align: middle;
+    overflow: hidden;
+
+    // !important vence os atributos width/height que o lottie-web põe no canvas.
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+  }
+}
